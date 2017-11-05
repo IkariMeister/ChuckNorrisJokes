@@ -35,7 +35,7 @@ class JokeByKeywordPresenter(val context: ResLocator, val repository: ChuckNorri
                 } else if(result.success()) {
                     view?.showEmptyCase()
                 } else {
-                    view?.showApiError(result.second ?: "")
+                    view?.showApiError(result.second?.message() ?: "")
                 }
             }
         } else {
