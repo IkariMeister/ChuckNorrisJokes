@@ -24,7 +24,6 @@ class RandomJokePresenter(val resLocator: ResLocator, val repository: ChuckNorri
     interface MVPView {
         fun showJokeText(text: String)
         fun showJokeImage(url: String)
-
     }
 
     interface Navigator {
