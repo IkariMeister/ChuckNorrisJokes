@@ -12,9 +12,11 @@ class RandomJokePresenter(val resLocator: ResLocator, val repository: ChuckNorri
         coroutine {
             repository.getRandomJoke()
         }.await().let { result ->
-            if(result.success()) {
+            if (result.success()) {
                 view?.showJokeText(result.first?.value ?: "")
-                view?.showJokeImage(result.first?.iconUrl ?: "")
+
+                if (result.first?.hasImage() ?: false)
+                    view?.showJokeImage(result.first?.iconUrl ?: "")
             }
         }
     }

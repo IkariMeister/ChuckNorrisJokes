@@ -6,4 +6,9 @@ data class Joke(
         val url: String = "",
         val value: String = "",
         val categories: List<String>? = emptyList()
-)
+) {
+
+    fun hasImage(): Boolean {
+        return iconUrl.isNotEmpty()
+    }
+}
