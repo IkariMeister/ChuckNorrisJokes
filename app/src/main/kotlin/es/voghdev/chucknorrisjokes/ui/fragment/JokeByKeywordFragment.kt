@@ -10,11 +10,12 @@ import es.voghdev.chucknorrisjokes.datasource.api.GetRandomJokeByCategoryApiImpl
 import es.voghdev.chucknorrisjokes.datasource.api.GetRandomJokeByKeywordApiImpl
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 import es.voghdev.chucknorrisjokes.ui.presenter.JokeByKeywordPresenter
+import kotlinx.android.synthetic.main.fragment_joke_by_keyword.*
 import kotlinx.coroutines.experimental.runBlocking
+import org.jetbrains.anko.toast
 
 
 class JokeByKeywordFragment : BaseFragment(), JokeByKeywordPresenter.MVPView, JokeByKeywordPresenter.Navigator {
-
     var presenter: JokeByKeywordPresenter? = null
 
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -33,9 +34,17 @@ class JokeByKeywordFragment : BaseFragment(), JokeByKeywordPresenter.MVPView, Jo
         runBlocking {
             presenter?.initialize()
         }
+
+        btn_search.setOnClickListener {
+            presenter?.onSearchButtonClicked(et_keyword.text?.toString()?.trim() ?: "")
+        }
     }
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_joke_by_keyword
+    }
+
+    override fun showKeywordError(text: String) {
+        activity.toast(text)
     }
 }
