@@ -17,6 +17,7 @@ class JokeByKeywordPresenter(val context: ResLocator, val repository: ChuckNorri
         fun showEmptyCase()
         fun showJokeText(text: String)
         fun showJokeImage(url: String)
+        fun showApiError(text: String)
     }
 
     interface Navigator {
@@ -34,7 +35,7 @@ class JokeByKeywordPresenter(val context: ResLocator, val repository: ChuckNorri
                 } else if(result.success()) {
                     view?.showEmptyCase()
                 } else {
-
+                    view?.showApiError(result.second ?: "")
                 }
             }
         } else {

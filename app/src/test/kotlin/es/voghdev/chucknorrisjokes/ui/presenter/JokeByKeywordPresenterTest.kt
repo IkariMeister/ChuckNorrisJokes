@@ -3,6 +3,7 @@ package es.voghdev.chucknorrisjokes.ui.presenter
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import es.voghdev.chucknorrisjokes.app.ResLocator
+import es.voghdev.chucknorrisjokes.model.CNError
 import es.voghdev.chucknorrisjokes.model.Joke
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 import kotlinx.coroutines.experimental.runBlocking
@@ -108,6 +109,23 @@ class JokeByKeywordPresenterTest() {
         }
 
         verify(mockView).showJokeImage("http://chuck.image.url")
+    }
+
+    @Test
+    fun `should show an API error if API returns an error`() {
+        givenTheApiReturnsAnError()
+
+        runBlocking {
+            presenter.initialize()
+
+            presenter.onSearchButtonClicked("Bruce")
+        }
+
+        verify(mockView).showApiError("API is not responding")
+    }
+
+    private fun givenTheApiReturnsAnError() {
+        whenever(mockChuckNorrisRepository.getRandomJokeByKeyword(anyString())).thenReturn(Pair(null, CNError("API is not responding")))
     }
 
     private fun givenThereAreSomeJokes() {
