@@ -2,7 +2,8 @@ package es.voghdev.chucknorrisjokes.ui.presenter
 
 import es.voghdev.chucknorrisjokes.app.ResLocator
 import es.voghdev.chucknorrisjokes.app.coroutine
-import es.voghdev.chucknorrisjokes.app.success
+import es.voghdev.chucknorrisjokes.app.hasNoResults
+import es.voghdev.chucknorrisjokes.app.hasResults
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 
 class JokeByKeywordPresenter(val context: ResLocator, val repository: ChuckNorrisRepository) :
@@ -25,21 +26,22 @@ class JokeByKeywordPresenter(val context: ResLocator, val repository: ChuckNorri
     }
 
     suspend fun onSearchButtonClicked(text: String) {
-        if(text.isNotEmpty()) {
-            coroutine {
-                repository.getRandomJokeByKeyword(text.toLowerCase())
-            }.await().let { result ->
-                if(result.success() && result.first?.isNotEmpty() ?: false) {
-                    view?.showJokeText(result.first?.elementAt(0)?.value ?: "")
-                    view?.showJokeImage(result.first?.elementAt(0)?.iconUrl ?: "")
-                } else if(result.success()) {
-                    view?.showEmptyCase()
-                } else {
-                    view?.showApiError(result.second?.message() ?: "")
-                }
-            }
-        } else {
+        if (text.isEmpty()) {
             view?.showKeywordError("Please enter a keyword")
+            return
+        }
+
+        val apiResponse = coroutine {
+            repository.getRandomJokeByKeyword(text.toLowerCase())
+        }.await()
+
+        if (apiResponse.hasResults()) {
+            view?.showJokeText(apiResponse.first?.elementAt(0)?.value ?: "")
+            view?.showJokeImage(apiResponse.first?.elementAt(0)?.iconUrl ?: "")
+        } else if (apiResponse.hasNoResults()) {
+            view?.showEmptyCase()
+        } else {
+            view?.showApiError(apiResponse.second?.message() ?: "")
         }
     }
 }
