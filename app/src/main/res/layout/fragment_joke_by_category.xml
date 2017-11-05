@@ -14,7 +14,7 @@
 
     <TextView
         android:id="@+id/tv_text"
-        style="@style/ChuckNorrisText.RandomJoke"
+        style="@style/ChuckNorrisText.JokeByCategory"
         android:text="Hello World! This is JokeByCategoryFragment" />
 
     <ImageView
