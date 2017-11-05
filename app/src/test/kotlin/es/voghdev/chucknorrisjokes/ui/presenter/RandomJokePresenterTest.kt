@@ -3,8 +3,12 @@ package es.voghdev.chucknorrisjokes.ui.presenter
 import es.voghdev.chucknorrisjokes.app.ResLocator
 import es.voghdev.chucknorrisjokes.model.Joke
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
+import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
+import org.junit.Test
 import org.mockito.Mock
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import org.mockito.MockitoAnnotations
 
 class RandomJokePresenterTest {
@@ -14,9 +18,9 @@ class RandomJokePresenterTest {
 
     @Mock lateinit var mockView: RandomJokePresenter.MVPView
 
-    @Mock lateinit var mockChuckNorrisRepository : ChuckNorrisRepository
+    @Mock lateinit var mockChuckNorrisRepository: ChuckNorrisRepository
 
-    lateinit var presenter : RandomJokePresenter
+    lateinit var presenter: RandomJokePresenter
 
     val exampleJoke = Joke(
             id = "GdEH64AkS9qEQCmqMwM2Rg",
@@ -30,6 +34,15 @@ class RandomJokePresenterTest {
         MockitoAnnotations.initMocks(this)
 
         presenter = createMockedPresenter()
+    }
+
+    @Test
+    fun `should request a random joke from the API on start`() {
+        runBlocking {
+            presenter.initialize()
+        }
+
+        verify(mockChuckNorrisRepository, times(1)).getRandomJoke()
     }
 
     private fun createMockedPresenter(): RandomJokePresenter {
