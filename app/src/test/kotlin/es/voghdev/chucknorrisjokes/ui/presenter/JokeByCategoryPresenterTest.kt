@@ -4,6 +4,9 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import es.voghdev.chucknorrisjokes.anyCategory
 import es.voghdev.chucknorrisjokes.app.ResLocator
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import es.voghdev.chucknorrisjokes.app.ResLocator
+import es.voghdev.chucknorrisjokes.model.Joke
 import es.voghdev.chucknorrisjokes.model.JokeCategory
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 import kotlinx.coroutines.experimental.runBlocking
@@ -28,6 +31,19 @@ class JokeByCategoryPresenterTest() {
             JokeCategory("politics"),
             JokeCategory("sports")
     )
+
+    val categories = listOf(
+            JokeCategory("Politics"),
+            JokeCategory("Sports")
+    )
+
+    val exampleJoke = Joke(id = "abc",
+            iconUrl = "http://chuck.image.url",
+            url = "http://example.url",
+            value = "We have our fears, fear has its Chuck Norris'es")
+
+    val categoryCaptor = argumentCaptor<JokeCategory>()
+    val strCaptor = argumentCaptor<String>()
 
     @Before
     fun setUp() {
@@ -74,6 +90,7 @@ class JokeByCategoryPresenterTest() {
     @Test
     fun `should show the joke's text when a random joke is received`() {
         givenThereAreSomeCategories(someCategories)
+        givenTheRepositoryReturns(exampleJoke)
 
         runBlocking {
             presenter.initialize()
@@ -81,7 +98,11 @@ class JokeByCategoryPresenterTest() {
             presenter.onSearchButtonClicked(1)
         }
 
-        verify(mockView).showJokeText("")
+        verify(mockView).showJokeText("We have our fears, fear has its Chuck Norris'es")
+    }
+
+    private fun givenTheRepositoryReturns(joke: Joke) {
+        whenever(mockChuckNorrisRepository.getRandomJokeByCategory(anyCategory())).thenReturn(Pair(joke, null))
     }
 
     private fun givenThereAreSomeCategories(someCategories: List<JokeCategory>) {

@@ -50,4 +50,8 @@ class JokeByCategoryFragment : BaseFragment(), JokeByCategoryPresenter.MVPView, 
         val names = categories.map { c -> c.name }
         spn_categories.configureDefaultAdapter(names)
     }
+
+    override fun showJokeText(text: String) {
+        tv_text.text = text
+    }
 }

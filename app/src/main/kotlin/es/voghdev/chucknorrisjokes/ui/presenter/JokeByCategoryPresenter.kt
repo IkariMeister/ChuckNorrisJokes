@@ -24,6 +24,7 @@ class JokeByCategoryPresenter(val context: ResLocator, val repository: ChuckNorr
 
     interface MVPView {
         fun fillCategoriesSpinner(categories: List<JokeCategory>)
+        fun showJokeText(text: String)
 
     }
 
