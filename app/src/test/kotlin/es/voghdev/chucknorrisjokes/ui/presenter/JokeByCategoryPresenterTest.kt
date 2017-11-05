@@ -65,10 +65,23 @@ class JokeByCategoryPresenterTest() {
         runBlocking {
             presenter.initialize()
 
-            presenter.onCategorySelected(someCategories.elementAt(1))
+            presenter.onSearchButtonClicked(1)
         }
 
         verify(mockChuckNorrisRepository).getRandomJokeByCategory(anyCategory())
+    }
+
+    @Test
+    fun `should show the joke's text when a random joke is received`() {
+        givenThereAreSomeCategories(someCategories)
+
+        runBlocking {
+            presenter.initialize()
+
+            presenter.onSearchButtonClicked(1)
+        }
+
+        verify(mockView).showJokeText("")
     }
 
     private fun givenThereAreSomeCategories(someCategories: List<JokeCategory>) {

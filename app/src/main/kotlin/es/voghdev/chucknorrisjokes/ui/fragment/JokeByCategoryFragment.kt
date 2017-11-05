@@ -2,7 +2,6 @@ package es.voghdev.chucknorrisjokes.ui.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.widget.AdapterView
 import es.voghdev.chucknorrisjokes.R
 import es.voghdev.chucknorrisjokes.app.AndroidResLocator
 import es.voghdev.chucknorrisjokes.app.configureDefaultAdapter
@@ -36,14 +35,9 @@ class JokeByCategoryFragment : BaseFragment(), JokeByCategoryPresenter.MVPView, 
             presenter?.initialize()
         }
 
-        spn_categories.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, p3: Long) {
-                runBlocking {
-                    presenter?.onCategorySelected(spn_categories.adapter.getItem(position) as JokeCategory)
-                }
+        btn_search.setOnClickListener {
+            runBlocking {
+                presenter?.onSearchButtonClicked(spn_categories.selectedItemPosition)
             }
         }
     }

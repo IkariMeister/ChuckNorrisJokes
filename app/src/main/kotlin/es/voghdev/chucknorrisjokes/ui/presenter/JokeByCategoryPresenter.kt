@@ -9,12 +9,16 @@ import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 class JokeByCategoryPresenter(val context: ResLocator, val repository: ChuckNorrisRepository) :
         Presenter<JokeByCategoryPresenter.MVPView, JokeByCategoryPresenter.Navigator>() {
 
+    var categories : List<JokeCategory> = emptyList()
+
     override suspend fun initialize() {
         coroutine {
             repository.getJokeCategories()
         }.await().let { result ->
-            if (result.success())
-                view?.fillCategoriesSpinner(result.first ?: emptyList())
+            if (result.success()) {
+                categories = result.first ?: emptyList()
+                view?.fillCategoriesSpinner(categories)
+            }
         }
     }
 
@@ -27,11 +31,7 @@ class JokeByCategoryPresenter(val context: ResLocator, val repository: ChuckNorr
 
     }
 
-    suspend fun onCategorySelected(category: JokeCategory) {
-        coroutine {
-            repository.getRandomJokeByCategory(category)
-        }.await().let { result ->
-
-        }
+    suspend fun onSearchButtonClicked(position: Int) {
+        repository.getRandomJokeByCategory(categories[position])
     }
 }
