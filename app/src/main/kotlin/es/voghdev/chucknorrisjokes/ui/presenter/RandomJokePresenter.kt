@@ -14,6 +14,7 @@ class RandomJokePresenter(val resLocator: ResLocator, val repository: ChuckNorri
         }.await().let { result ->
             if(result.success()) {
                 view?.showJokeText(result.first?.value ?: "")
+                view?.showJokeImage(result.first?.iconUrl ?: "")
             }
         }
     }
