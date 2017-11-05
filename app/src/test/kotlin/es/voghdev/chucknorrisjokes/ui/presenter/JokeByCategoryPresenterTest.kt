@@ -2,6 +2,7 @@ package es.voghdev.chucknorrisjokes.ui.presenter
 
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import es.voghdev.chucknorrisjokes.anyCategory
 import es.voghdev.chucknorrisjokes.app.ResLocator
 import es.voghdev.chucknorrisjokes.model.JokeCategory
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
@@ -23,6 +24,11 @@ class JokeByCategoryPresenterTest() {
 
     @Mock lateinit var mockChuckNorrisRepository: ChuckNorrisRepository
 
+    val someCategories = listOf(
+            JokeCategory("politics"),
+            JokeCategory("sports")
+    )
+
     @Before
     fun setUp() {
         MockitoAnnotations.initMocks(this)
@@ -32,6 +38,8 @@ class JokeByCategoryPresenterTest() {
 
     @Test
     fun `should request the list of categories on start`() {
+        givenThereAreSomeCategories(someCategories)
+
         runBlocking {
             presenter.initialize()
         }
@@ -40,24 +48,7 @@ class JokeByCategoryPresenterTest() {
     }
 
     @Test
-    fun `should fill the list of categories in the spinner`() {
-        val someCategories = listOf(
-                JokeCategory("politics"),
-                JokeCategory("sports")
-        )
-        givenThereAreSomeCategories(someCategories)
-
-        runBlocking {
-            presenter.initialize()
-        }
-    }
-
-    @Test
     fun `should fill the categories spinner when categories are received`() {
-        val someCategories = listOf(
-                JokeCategory("politics"),
-                JokeCategory("sports")
-        )
         givenThereAreSomeCategories(someCategories)
 
         runBlocking {
@@ -65,6 +56,19 @@ class JokeByCategoryPresenterTest() {
         }
 
         verify(mockView).fillCategoriesSpinner(anyList())
+    }
+
+    @Test
+    fun `should request a random joke by category to the API when "search" button is clicked`() {
+        givenThereAreSomeCategories(someCategories)
+
+        runBlocking {
+            presenter.initialize()
+
+            presenter.onCategorySelected(someCategories.elementAt(1))
+        }
+
+        verify(mockChuckNorrisRepository).getRandomJokeByCategory(anyCategory())
     }
 
     private fun givenThereAreSomeCategories(someCategories: List<JokeCategory>) {
