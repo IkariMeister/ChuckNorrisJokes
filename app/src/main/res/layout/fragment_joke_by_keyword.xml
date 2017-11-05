@@ -6,12 +6,11 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/til_keyword"
-        style="@style/Nothing" >
+        style="@style/KeywordTextInputLayout" >
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/et_keyword"
-            style="@style/"
-            android:gravity="top"
+            style="@style/KeywordEditText"
             />
     </android.support.design.widget.TextInputLayout>
 
