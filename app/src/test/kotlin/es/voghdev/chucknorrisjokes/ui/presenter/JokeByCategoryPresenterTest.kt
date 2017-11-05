@@ -3,7 +3,6 @@ package es.voghdev.chucknorrisjokes.ui.presenter
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import es.voghdev.chucknorrisjokes.anyCategory
-import es.voghdev.chucknorrisjokes.app.ResLocator
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import es.voghdev.chucknorrisjokes.app.ResLocator
 import es.voghdev.chucknorrisjokes.model.Joke
@@ -77,6 +76,7 @@ class JokeByCategoryPresenterTest() {
     @Test
     fun `should request a random joke by category to the API when "search" button is clicked`() {
         givenThereAreSomeCategories(someCategories)
+        givenTheRepositoryReturns(exampleJoke)
 
         runBlocking {
             presenter.initialize()
@@ -88,7 +88,7 @@ class JokeByCategoryPresenterTest() {
     }
 
     @Test
-    fun `should show the joke's text when a random joke is received`() {
+    fun `should show the joke's text when a joke by category is received`() {
         givenThereAreSomeCategories(someCategories)
         givenTheRepositoryReturns(exampleJoke)
 
@@ -99,6 +99,20 @@ class JokeByCategoryPresenterTest() {
         }
 
         verify(mockView).showJokeText("We have our fears, fear has its Chuck Norris'es")
+    }
+
+    @Test
+    fun `should show the joke's image when a joke by category is received`() {
+        givenThereAreSomeCategories(someCategories)
+        givenTheRepositoryReturns(exampleJoke)
+
+        runBlocking {
+            presenter.initialize()
+
+            presenter.onSearchButtonClicked(1)
+        }
+
+        verify(mockView).showJokeImage("http://chuck.image.url")
     }
 
     private fun givenTheRepositoryReturns(joke: Joke) {

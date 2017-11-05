@@ -9,7 +9,7 @@ import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 class JokeByCategoryPresenter(val context: ResLocator, val repository: ChuckNorrisRepository) :
         Presenter<JokeByCategoryPresenter.MVPView, JokeByCategoryPresenter.Navigator>() {
 
-    var categories : List<JokeCategory> = emptyList()
+    var categories: List<JokeCategory> = emptyList()
 
     override suspend fun initialize() {
         coroutine {
@@ -25,6 +25,7 @@ class JokeByCategoryPresenter(val context: ResLocator, val repository: ChuckNorr
     interface MVPView {
         fun fillCategoriesSpinner(categories: List<JokeCategory>)
         fun showJokeText(text: String)
+        fun showJokeImage(url: String)
 
     }
 
@@ -33,6 +34,13 @@ class JokeByCategoryPresenter(val context: ResLocator, val repository: ChuckNorr
     }
 
     suspend fun onSearchButtonClicked(position: Int) {
-        repository.getRandomJokeByCategory(categories[position])
+        val result = coroutine {
+            repository.getRandomJokeByCategory(categories[position])
+        }.await()
+
+        if (result.success()) {
+            view?.showJokeText(result.first?.value ?: "")
+            view?.showJokeImage(result.first?.iconUrl ?: "")
+        }
     }
 }
