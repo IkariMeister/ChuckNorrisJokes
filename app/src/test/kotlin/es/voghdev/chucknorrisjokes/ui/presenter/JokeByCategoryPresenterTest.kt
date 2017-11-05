@@ -3,6 +3,7 @@ package es.voghdev.chucknorrisjokes.ui.presenter
 import com.nhaarman.mockito_kotlin.verify
 import es.voghdev.chucknorrisjokes.app.ResLocator
 import kotlinx.coroutines.experimental.runBlocking
+import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -16,6 +17,8 @@ class JokeByCategoryPresenterTest() {
     @Mock lateinit var mockView: JokeByCategoryPresenter.MVPView
 
     lateinit var presenter: JokeByCategoryPresenter
+
+    @Mock lateinit var mockChuckNorrisRepository : ChuckNorrisRepository
 
     @Before
     fun setUp() {
@@ -34,7 +37,7 @@ class JokeByCategoryPresenterTest() {
     }
 
     private fun createMockedPresenter(): JokeByCategoryPresenter {
-        val presenter = JokeByCategoryPresenter(mockResLocator)
+        val presenter = JokeByCategoryPresenter(mockResLocator, mockChuckNorrisRepository)
         presenter.view = mockView
         presenter.navigator = mockNavigator
         return presenter
