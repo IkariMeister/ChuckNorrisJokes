@@ -75,13 +75,17 @@ class RandomJokePresenterTest {
     fun `should not load the joke's image if it's empty`() {
         val jokeWithoutImage = exampleJoke.copy(iconUrl = "")
 
-        whenever(mockChuckNorrisRepository.getRandomJoke()).thenReturn(Pair(jokeWithoutImage, null))
+        givenThereIsAJoke(jokeWithoutImage)
 
         runBlocking {
             presenter.initialize()
         }
 
         verify(mockView, times(0)).showJokeImage(anyString())
+    }
+
+    private fun givenThereIsAJoke(jokeWithoutImage: Joke) {
+        whenever(mockChuckNorrisRepository.getRandomJoke()).thenReturn(Pair(jokeWithoutImage, null))
     }
 
     private fun givenThereIsARandomJoke() {
