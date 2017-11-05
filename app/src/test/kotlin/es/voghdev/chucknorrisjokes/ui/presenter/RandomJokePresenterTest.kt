@@ -1,11 +1,13 @@
 package es.voghdev.chucknorrisjokes.ui.presenter
 
+import com.nhaarman.mockito_kotlin.whenever
 import es.voghdev.chucknorrisjokes.app.ResLocator
 import es.voghdev.chucknorrisjokes.model.Joke
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 import kotlinx.coroutines.experimental.runBlocking
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
@@ -38,11 +40,39 @@ class RandomJokePresenterTest {
 
     @Test
     fun `should request a random joke from the API on start`() {
+        givenThereIsARandomJoke()
+
         runBlocking {
             presenter.initialize()
         }
 
         verify(mockChuckNorrisRepository, times(1)).getRandomJoke()
+    }
+
+    @Test
+    fun `should show the joke's text when a random joke is received from the API`() {
+        givenThereIsARandomJoke()
+
+        runBlocking {
+            presenter.initialize()
+        }
+
+        verify(mockView, times(1)).showJokeText("Chuck Norris knows how to say souffle in the French language.")
+    }
+
+    @Test
+    fun `should show the joke's image when a random joke is received from the API`() {
+        givenThereIsARandomJoke()
+
+        runBlocking {
+            presenter.initialize()
+        }
+
+        verify(mockView, times(1)).showJokeImage("https://assets.chucknorris.host/img/avatar/chuck-norris.png")
+    }
+
+    private fun givenThereIsARandomJoke() {
+        whenever(mockChuckNorrisRepository.getRandomJoke()).thenReturn(Pair(exampleJoke, null))
     }
 
     private fun createMockedPresenter(): RandomJokePresenter {
