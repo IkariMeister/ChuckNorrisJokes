@@ -2,7 +2,7 @@ package es.voghdev.chucknorrisjokes.ui.presenter
 
 import es.voghdev.chucknorrisjokes.app.ResLocator
 import es.voghdev.chucknorrisjokes.app.coroutine
-import es.voghdev.chucknorrisjokes.app.success
+import es.voghdev.chucknorrisjokes.app.hasResults
 import es.voghdev.chucknorrisjokes.model.Joke
 import es.voghdev.chucknorrisjokes.repository.ChuckNorrisRepository
 
@@ -25,24 +25,23 @@ class JokeByKeywordPresenter(val context: ResLocator, val repository: ChuckNorri
     }
 
     suspend fun onSearchButtonClicked(query: String) {
-        if (query.isEmpty())
+        if (query.isEmpty()) {
             view?.showError("Please enter a keyword")
-        else {
-            val result = coroutine {
-                repository.getRandomJokeByKeyword(query.toLowerCase())
-            }.await()
+            return
+        }
 
-            if(result.success()) {
-                result.first?.forEach { joke ->
-                    view?.addJoke(joke)
-                }
+        val response = coroutine {
+            repository.getRandomJokeByKeyword(query.toLowerCase())
+        }.await()
 
-                if(result.first?.isEmpty() ?: false) {
-                    view?.showEmptyCase()
-                } else {
-                    view?.hideEmptyCase()
-                }
+        if (response.hasResults()) {
+            view?.hideEmptyCase()
+
+            response.first?.forEach { joke ->
+                view?.addJoke(joke)
             }
+        } else {
+            view?.showEmptyCase()
         }
     }
 }
