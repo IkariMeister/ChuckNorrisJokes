@@ -45,12 +45,12 @@ class JokeByKeywordFragment : BaseFragment(), JokeByKeywordPresenter.MVPView, Jo
             presenter?.initialize()
         }
 
-//        btn_search.setOnClickListener {
-//            val keyword = et_keyword.text?.toString()?.trim() ?: ""
-//            runBlocking {
-//                presenter?.onSearchButtonClicked(keyword)
-//            }
-//        }
+        btn_search.setOnClickListener {
+            val keyword = et_keyword.text?.toString()?.trim() ?: ""
+            runBlocking {
+                presenter?.onSearchButtonClicked(keyword)
+            }
+        }
     }
 
     override fun getLayoutId(): Int {
@@ -64,11 +64,11 @@ class JokeByKeywordFragment : BaseFragment(), JokeByKeywordPresenter.MVPView, Jo
         recyclerView.visibility = INVISIBLE
     }
 
-//    override fun hideEmptyCase() {
-//        tv_empty_case.visibility = INVISIBLE
-//
-//        recyclerView.visibility = VISIBLE
-//    }
+    override fun hideEmptyCase() {
+        tv_empty_case.visibility = INVISIBLE
+
+        recyclerView.visibility = VISIBLE
+    }
 
     override fun addJoke(joke: Joke) {
         adapter?.add(joke)

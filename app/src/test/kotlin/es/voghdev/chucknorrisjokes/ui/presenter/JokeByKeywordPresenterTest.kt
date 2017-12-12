@@ -100,6 +100,17 @@ class JokeByKeywordPresenterTest() {
         verify(mockView).showEmptyCase()
     }
 
+    @Test
+    fun `should hide the empty case if the API returns one or more results`() {
+        givenTheApiReturns(someJokes)
+
+        runBlocking {
+            presenter.onSearchButtonClicked("Bruce Lee")
+        }
+
+        verify(mockView).hideEmptyCase()
+    }
+
     private fun givenTheApiReturns(someJokes: List<Joke>) {
         whenever(mockChuckNorrisRepository.getRandomJokeByKeyword(anyString())).thenReturn(Pair(someJokes, null))
     }
