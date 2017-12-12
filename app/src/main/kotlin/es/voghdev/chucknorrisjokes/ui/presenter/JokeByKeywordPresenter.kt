@@ -35,6 +35,10 @@ class JokeByKeywordPresenter(val context: ResLocator, val repository: ChuckNorri
                 result.first?.forEach { joke ->
                     view?.addJoke(joke)
                 }
+
+                if(result.first?.isEmpty() ?: false) {
+                    view?.showEmptyCase()
+                }
             }
         }
     }
